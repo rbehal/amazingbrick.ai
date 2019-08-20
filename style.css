@@ -1,0 +1,13 @@
+html, body {
+  height: 100%;
+}
+
+canvas {
+  display: block;
+}
+
+.rectangle {
+  height: 150px;
+  width:300px;
+  background-color: #FFF;
+}
