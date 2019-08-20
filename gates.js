@@ -97,7 +97,7 @@ class Gates {
       return fill(159, 255, 126) //green
     }
     if (this.c === 2) {
-      return fill(255, 255, 0) //yellow
+      return fill(255, 211, 0) //yellow
     }
     if (this.c === 3) {
       return fill(230, 0, 0) //red
