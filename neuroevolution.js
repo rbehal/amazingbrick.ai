@@ -25,7 +25,9 @@ function killGeneration() {
   //Resetting numGates
   numGate = 5;
   //Increasing generation number
-  numGen++;
+  if (cb.checked()) {
+    numGen++;
+  }
   //Resetting score
   score = 0;
 }
