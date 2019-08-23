@@ -1,5 +1,6 @@
 html, body {
   height: 100%;
+  background-image: url("./Media/network.jpg");
 }
 
 canvas {
@@ -9,5 +10,21 @@ canvas {
 .rectangle {
   height: 150px;
   width:300px;
-  background-color: #FFF;
+  background-color: rgb(17, 0, 255);
 }
+
+.roundedcorners{
+  border-radius: 50px;
+  border: 10px solid rgb(25, 0, 253); 
+  padding: 10px;
+  padding-left: 5px;
+  padding-right: 2px;
+  padding-top: 10px;
+  width: 200px;
+  height: 250px; 
+  color: rgb(255, 255, 255);
+  font-family: Verdana;
+  font-size: 15px;
+
+}
+

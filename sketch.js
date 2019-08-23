@@ -25,6 +25,7 @@ function setup() {
   y = windowHeight / 2;
   
   //Creating all elements
+  displayAudio();
   displayCanvas();
   displayControls();
   displayCheckbox();
@@ -44,10 +45,30 @@ function setup() {
   ang = PI/4;
   players.push(new player());
 
+  button = createButton('Pause');
+  button.position(x+width/1.5,y+60);
+  button.mousePressed(pause);
+
+}
+
+function pause() {
+  noLoop();
+  button = createButton('Play');
+  button.position(x+width/1.5,y+90);
+  button.mousePressed(playAgain);
+}
+
+function playAgain() {
+  loop();
 }
 
 function draw() {
   
+  /*button2 = createButton('Start Game');
+  button2.position(x-1.75*width+90,y-150);
+  button2.mousePressed(loop());
+  noLoop();*/
+
   //Checking for NN play to allow slider
   if (cb.checked()) {
     trainSpeed = slider.value();
@@ -56,8 +77,74 @@ function draw() {
     trainSpeed = 1;
     slider.hide();  
   }
+
+  for (var g = 0; g < trainSpeed; g++) {
+
+    //Reinitializing gates
+    if (gates.length === 0) {
+      for (let k = 0; k < 5; k++) {
+        gates.push(new Gates());
+        gates[k].c = 5;
+      }
+    }
+
+    //Generating new gates
+    if (gates.length < 5) {
+      gates.push(new Gates());
+    }
+
+    //Killing if player hits
+    for (var i = 0; i < gates.length; i++) {
+      if (players.length > 0) {
+        if (gates[i].hits()) {
+          players[0].hit -= 1;
+          killGeneration();
+        }
+      }
+    }
+
+    //All player logic  
+    if (players.length > 0) {
+      //Neural network making a decision
+      if (cb.checked()) {
+        players[0].decide(gates);
+      }
+      //Updating fitness parameters
+      if (cb.checked()) {
+        players[0].fitnessParam();
+      }
+      //Gravity logic
+      players[0].gravity();
+      //X pos. logic
+      players[0].drag();
+    } else {
+      //Spawning new player
+      nextGeneration();
+    }
+
+  } 
+
   
-  //All game logic wrapped in for loop for training
+  //All of the visualization -- not in for loop
+  background(255);
+
+  //Visualizing gates
+  for (let o = 0; o < gates.length; o++) {
+    gates[o].generate();
+  }
+
+  //Score & generation visualization
+  if (cb.checked()) {
+    displayGen();
+  }
+  displayScore();
+  
+  //Player visualization
+  players[0].display();
+
+}
+
+function start_Game(){
   for (var g = 0; g < trainSpeed; g++) {
 
     //Reinitializing gates
@@ -103,27 +190,9 @@ function draw() {
     }
 
   }
-
-  //All of the visualization -- not in for loop
-  background(255);
-
-  //Visualizing gates
-  for (let o = 0; o < gates.length; o++) {
-    gates[o].generate();
-  }
-
-  //Score & generation visualization
-  if (cb.checked()) {
-    displayGen();
-  }
-  displayScore();
-  
-  //Player visualization
-  players[0].display();
-
 }
 
-function mousePressed() {
+function gameMousePressed() {
 
   //Using mouse buttons for gameplay
   players[0].playerJump();
@@ -144,3 +213,4 @@ function keyPressed() {
   }
     
 }
+
