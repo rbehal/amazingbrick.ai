@@ -40,7 +40,7 @@ function setup() {
   
   //Loading background and image
   background(255);
-  img = loadImage('AmazingBrick.png');
+  img = loadImage('Media/AmazingBrick.png');
 
   //Creating gates and player arrays
   gates = [];
