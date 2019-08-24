@@ -7,6 +7,7 @@ function nextGeneration() {
     players.push(eugenics());
   } else {
   //Pushing new player for manual
+    startGame = false;
     players.push(new player());
   }
 }
