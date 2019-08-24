@@ -16,11 +16,15 @@ let slider;
 let trainSpeed = 1;
 let highestScore = 0;
 let name = "";
+let startGame;
 
 function setup() {
 
   //Setting tensorflow to use CPU
   tf.setBackend('cpu');
+  
+  //Game not started yet
+  startGame = false;
   
   //Setting values to position elements
   x = windowWidth / 2;
@@ -33,6 +37,10 @@ function setup() {
   displayCheckbox();
   displaySlider();
   displayLeaderboard();
+  
+  //Loading background and image
+  background(255);
+  img = loadImage('AmazingBrick.png');
 
   //Creating gates and player arrays
   gates = [];
@@ -70,6 +78,11 @@ function draw() {
   button2.position(x-1.75*width+90,y-150);
   button2.mousePressed(loop());
   noLoop();*/
+  
+  //Checking if game started
+  if (!startGame) {
+  image(img,width/4,height/3,img.width/2,img.height/2);
+  } else {
 
   //Checking for NN play to allow slider
   if (cb.checked()) {
@@ -155,9 +168,15 @@ function draw() {
   //Player visualization
   players[0].display();
 
+ }  
 }
 
-function gameMousePressed() {
+function mousePressed() {
+ 
+  //Starting game
+  if (!startGame) {
+    startGame = true;
+  }
 
   //Using mouse buttons for gameplay
   players[0].playerJump();
@@ -166,6 +185,11 @@ function gameMousePressed() {
 
 function keyPressed() {
 
+  //Starting game
+  if (!startGame) {
+    startGame = true;
+  }
+  
   //Using arrow keys for gameplay
   if (keyCode === LEFT_ARROW) {
     Lkey = true;
