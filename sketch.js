@@ -14,6 +14,8 @@ let y;
 let cb;
 let slider;
 let trainSpeed = 1;
+let highestScore = 0;
+let name = "";
 
 function setup() {
 
@@ -30,6 +32,7 @@ function setup() {
   displayControls();
   displayCheckbox();
   displaySlider();
+  displayLeaderboard();
 
   //Creating gates and player arrays
   gates = [];
@@ -46,7 +49,7 @@ function setup() {
   players.push(new player());
 
   button = createButton('Pause');
-  button.position(x+width/1.5,y+60);
+  button.position(x+width/1.5+30,y-120);
   button.mousePressed(pause);
 
 }
@@ -54,7 +57,7 @@ function setup() {
 function pause() {
   noLoop();
   button = createButton('Play');
-  button.position(x+width/1.5,y+90);
+  button.position(x+width/1.5+30,y-90);
   button.mousePressed(playAgain);
 }
 
@@ -63,7 +66,6 @@ function playAgain() {
 }
 
 function draw() {
-  
   /*button2 = createButton('Start Game');
   button2.position(x-1.75*width+90,y-150);
   button2.mousePressed(loop());
@@ -92,12 +94,23 @@ function draw() {
     if (gates.length < 5) {
       gates.push(new Gates());
     }
-
     //Killing if player hits
     for (var i = 0; i < gates.length; i++) {
       if (players.length > 0) {
         if (gates[i].hits()) {
           players[0].hit -= 1;
+          if (score>highestScore) {
+            highestScore = score;
+            let userName = "";
+            if(isNaN(nameInput.value()) == false) {
+              userName = "Anonymous User";
+            }
+            else {
+              userName = nameInput.value();
+            }
+            var scoreString = `<p>`+userName+ ': '+highestScore+`</p>`;
+            document.getElementById("playerScore").innerHTML = scoreString;
+          }
           killGeneration();
         }
       }
@@ -142,54 +155,6 @@ function draw() {
   //Player visualization
   players[0].display();
 
-}
-
-function start_Game(){
-  for (var g = 0; g < trainSpeed; g++) {
-
-    //Reinitializing gates
-    if (gates.length === 0) {
-      for (let k = 0; k < 5; k++) {
-        gates.push(new Gates());
-        gates[k].c = 5;
-      }
-    }
-
-    //Generating new gates
-    if (gates.length < 5) {
-      gates.push(new Gates());
-    }
-
-    //Killing if player hits
-    for (var i = 0; i < gates.length; i++) {
-      if (players.length > 0) {
-        if (gates[i].hits()) {
-          players[0].hit -= 1;
-          killGeneration();
-        }
-      }
-    }
-
-    //All player logic  
-    if (players.length > 0) {
-      //Neural network making a decision
-      if (cb.checked()) {
-        players[0].decide(gates);
-      }
-      //Updating fitness parameters
-      if (cb.checked()) {
-        players[0].fitnessParam();
-      }
-      //Gravity logic
-      players[0].gravity();
-      //X pos. logic
-      players[0].drag();
-    } else {
-      //Spawning new player
-      nextGeneration();
-    }
-
-  }
 }
 
 function gameMousePressed() {
