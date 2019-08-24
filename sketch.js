@@ -14,6 +14,8 @@ let y;
 let cb;
 let slider;
 let trainSpeed = 1;
+let highestScore = 0;
+let name = "";
 
 function setup() {
 
@@ -25,10 +27,12 @@ function setup() {
   y = windowHeight / 2;
   
   //Creating all elements
+  displayAudio();
   displayCanvas();
   displayControls();
   displayCheckbox();
   displaySlider();
+  displayLeaderboard();
 
   //Creating gates and player arrays
   gates = [];
@@ -44,10 +48,29 @@ function setup() {
   ang = PI/4;
   players.push(new player());
 
+  button = createButton('Pause');
+  button.position(x+width/1.5+30,y-120);
+  button.mousePressed(pause);
+
+}
+
+function pause() {
+  noLoop();
+  button = createButton('Play');
+  button.position(x+width/1.5+30,y-90);
+  button.mousePressed(playAgain);
+}
+
+function playAgain() {
+  loop();
 }
 
 function draw() {
-  
+  /*button2 = createButton('Start Game');
+  button2.position(x-1.75*width+90,y-150);
+  button2.mousePressed(loop());
+  noLoop();*/
+
   //Checking for NN play to allow slider
   if (cb.checked()) {
     trainSpeed = slider.value();
@@ -56,8 +79,7 @@ function draw() {
     trainSpeed = 1;
     slider.hide();  
   }
-  
-  //All game logic wrapped in for loop for training
+
   for (var g = 0; g < trainSpeed; g++) {
 
     //Reinitializing gates
@@ -72,12 +94,23 @@ function draw() {
     if (gates.length < 5) {
       gates.push(new Gates());
     }
-
     //Killing if player hits
     for (var i = 0; i < gates.length; i++) {
       if (players.length > 0) {
         if (gates[i].hits()) {
           players[0].hit -= 1;
+          if (score>highestScore) {
+            highestScore = score;
+            let userName = "";
+            if(isNaN(nameInput.value()) == false) {
+              userName = "Anonymous User";
+            }
+            else {
+              userName = nameInput.value();
+            }
+            var scoreString = `<p>`+userName+ ': '+highestScore+`</p>`;
+            document.getElementById("playerScore").innerHTML = scoreString;
+          }
           killGeneration();
         }
       }
@@ -102,8 +135,9 @@ function draw() {
       nextGeneration();
     }
 
-  }
+  } 
 
+  
   //All of the visualization -- not in for loop
   background(255);
 
@@ -123,7 +157,7 @@ function draw() {
 
 }
 
-function mousePressed() {
+function gameMousePressed() {
 
   //Using mouse buttons for gameplay
   players[0].playerJump();
@@ -144,3 +178,4 @@ function keyPressed() {
   }
     
 }
+

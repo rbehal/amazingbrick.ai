@@ -1,3 +1,5 @@
+var nameInput;
+
 function displayCanvas() {
   //Scale for canvas, maintains aspect ratio
   let scale = 35;
@@ -9,25 +11,33 @@ function displayCanvas() {
 
 function displayControls() {
   //Control textbox content
-  let controlString = createP("Controls: <br><br> For Manual Play: Use mouse buttons to click on canvas or L/R arrow keys to move player. <br><br> For Neural Network Play: Tick checkbox. Use slider to adjust training speed");
-  
+  let controlString = createP("<p> *For Manual Play* </p> <p>Use mouse buttons to click on canvas or L/R arrow keys to move player.</p> <p> *To Initiate Neural Network*</p><p> Tick checkbox. Use slider to adjust training speed. </p>");
+
   //Positioning and styling textbox
-  controlString.position(x-1.75*width,y-75);
-  controlString.class("rectangle");
+  controlString.position(x-1.75*width + 20,y-120);
+  controlString.class("roundedcorners");
 }
 
 function displayCheckbox() {
   //Creating,styling,positioning checkbox
-  cb = createCheckbox('Let a NN play!',false);
-  cb.style('font-size','18px');
+  cb = createCheckbox('Let a Neural Network play!',false);
+  cb.style('font-size','14px');
+  cb.style('font-family','Verdana');
   cb.style('color','#FFFFFF');
-  cb.position(x+width/1.5,y);  
+  cb.position(x+width/1.5+30,y-180);  
+}
+
+function displayAudio() {
+  audiobox = createDiv(`<audio src="./Media/Astronomia.mp3" controls>
+  <p>If you are reading this, it is because your browser does not support the audio element.</p>
+  </audio>`);
+  audiobox.position(x-1.75*width - 380,y-200);
 }
 
 function displaySlider() {
   //Creating and positioning slider
   slider = createSlider(1, 75, 1);
-  slider.position(x+width/1.5,y+25);
+  slider.position(x+width/1.5+30,y-150);
 }
 
 function displayScore() {
@@ -48,6 +58,21 @@ function displayScore() {
   } else {
       return text(score.toString(), width-20, 25)
   } 
+}
+
+function displayLeaderboard() {
+  let nameQ = createP("<p>What is your name?</p?");
+  nameQ.position(x+width/1.5+30,y-90);
+  nameQ.class("h2");
+
+  nameInput = createInput();
+  nameInput.position(x+width/1.5+30,y-30);
+
+  let leaderboard = createDiv(`<div class="card">
+  <h1>High Score</h1>
+  <div id="playerScore"></div>
+  </div>`);
+  leaderboard.position(x+width/1.5+30,y-10);
 }
 
 function highscore() {
